@@ -1,24 +1,110 @@
-.App {
-  text-align: center;
-}
-
 .App-logo {
-  animation: App-logo-spin infinite 20s linear;
+  animation: App-logo-spin infinite 2s linear;
   height: 80px;
 }
 
 .App-header {
-  background-color: #222;
-  height: 150px;
+  background-color: #ffffff;
+  height: 120px;
   padding: 20px;
   color: white;
+  text-align: center;
+  border: solid 1px black
 }
 
-.App-intro {
-  font-size: large;
+h2{
+  padding-top: 30px;
+  text-align: center;
 }
 
-@keyframes App-logo-spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+.photo{
+  border: solid 2px black;
+  display:inline-block;
+  padding:44;
+  text-align: center;
+  font-size: 45px;
+  margin-bottom: 8px;
+  border-radius: 25px;
+}
+.placeHolder{
+  border:solid 2px black;
+  padding:30px;
+  width:233px;
+  text-align: center;
+  border-radius: 25px;
+  font-size: 23px;
+}
+
+.photoBlock{
+  padding-top: 50px;
+}
+
+.center{
+  margin: auto;
+  display: block;
+  max-width: 1050px;
+}
+
+.imageWrapper{
+  display: inline-block;
+  width:296px;
+  margin:27px;
+}
+
+.logoWrapper{
+  width:100px;
+
+}
+.logo{
+  display:inline-block;
+  margin: 0 auto;
+  width:170px;
+}
+
+.image {
+  width:205px;
+  height: 156px;
+  padding:43px;
+}
+
+/* Admin page */
+
+.formWrapper {
+
+  text-align: center;
+  margin: 0 auto ;
+  padding-top: 100px;
+
+}
+
+label {
+    width:60px;
+    font-size:12px;
+    line-height:24px;
+    font-weight:bold;
+
+}
+input {
+    width:300px;
+    line-height:18px;
+    padding: 5px 14px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    border:1px solid #CCC;
+    margin:20px;
+}
+
+.submit {
+  margin-left: 50px;
+  width:330px;
+}
+
+.imgInsert{
+  margin-right: 88px;
+}
+
+.previewImage {
+  border:2px solid black;
+  border-radius: 20px;
 }
