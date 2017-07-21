@@ -1,15 +1,14 @@
 import React, { Component } from 'react'
 import '../App.css'
 import AppHeader from './appHeader.js'
+import ProductsApi from '../api/hungry_axios'
 
 const AdminContainer = () => {
   return(
     <div>
-      <AppHeader />
-      <FormContainer />
+    <AppHeader />
+    <FormContainer />
     </div>
-
-
   )
 }
 
@@ -18,16 +17,43 @@ class FormContainer extends Component{
     super(props);
     this.state={
       file: '',
-      imageUrl: ''
+      imageUrl: '',
+      inputName: '',
+      inputPrice: ''
     };
+    this.handleNameChange = this.handleNameChange.bind(this);
+    this.handlePriceChange = this.handlePriceChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.sendName = this.handleSubmit.bind(this);
+  }
+
+  handleNameChange(e){
+      console.log(e.target.value)
+    this.setState({
+      name : e.target.value,
+    })
+  }
+  handlePriceChange(e){
+      console.log(e.target.value)
+    this.setState({
+      prices : e.target.value
+    })
+  }
+  sendName(e){
+    this.setState({
+      inputName: e.target.value,
+      inputName:e.target.value
+    })
   }
 
   handleSubmit(e){
     e.preventDefault();
-    console.log('Handelling the upload process',this.state.file)
+    console.log('Handelling the upload process',this.state.prices)
 
+/*
     let fileReader = new FileReader();
     let file = e.target.files[0];
+    console.log(e.target)
 
     fileReader.onloadend = () => {
       this.setState({
@@ -37,16 +63,33 @@ class FormContainer extends Component{
     }
     var preview = document.querySelector('.previewImage')
     fileReader.addEventListener("load", function () {
-    preview.src = fileReader.result;
-  }, false);
-    if (file) {
-      fileReader.readAsDataURL(file);
+      preview.src = fileReader.result;
+    }, false);
+    if (file) {
+      fileReader.readAsDataURL(file);
       console.log(file.name)
-    }
+    }
     //file ? fileReader.readAsDataUrl(file) : null
+*/
+  console.log('attempting to access axios...')
+   ProductsApi.submitProduct(this.state.name, this.state.prices, resp => {
+      console.log('response has been made', resp)
+      this.setState({
+        inputName:this.state.name,
+        inputPrice:this.state.prices
+      },function(){
+        console.log(resp,'this is resp')
+        console.log('Axios has send ',this.state.name,' to the database')
+
+      });
+    })
+    console.log(this.state.prices,'This is the new price')
+    console.log(this.state.name,'This is the new name')
   }
+
+
   render(){
-    let imageUrl = this.imageUrl
+    /*let imageUrl = this.imageUrl
     let imagePreview = null;
     if (imageUrl) {
       imagePreview = (<img src={imageUrl} />);
@@ -54,6 +97,7 @@ class FormContainer extends Component{
       imagePreview = (<div className="previewText">Please select an Image for Preview</div>)
     }
     console.log(imagePreview,'image')
+*/
     return(
 
       <div>
@@ -63,25 +107,22 @@ class FormContainer extends Component{
             <form>
               <label>
                 Name:
-                <input type="text" name="name" /><br />
+                <input value = {this.state.name} onChange={this.handleNameChange} type="text" placeholder='Name' /><br />
                 Price:
-                <input type='text' name='price' /><br />
+                <input value = {this.state.prices} onChange={this.handlePriceChange} type='text' /><br />
               </label>
-            </form>
-            <form >
-            <label>
-              Choose an Image:
-              <input className='imgInsert' type='file' onChange={(e)=>this.handleSubmit(e)}/>
-            </label>
-            </form>
-            <div>
+              <label>
+                Choose an Image:
+                <input className='imgInsert' type='file'/>
+              </label>
+              <div>
               <img  className = 'previewImage' />
-            </div>
-            <input type="submit" value="Submit" alt = "Preview Image here" className='submit'/>
+              </div>
+              <button className='btn updateBtn' onClick={(e) => this.handleSubmit(e)}>Submit</button>
+            </form>
           </div>
         </div>
       </div>
-
     )
   }
 

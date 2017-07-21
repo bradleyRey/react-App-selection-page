@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import '../App.css'
 import AppHeader from './appHeader.js'
+import ProductsApi from '../api/hungry_axios'
 
 
 class FoodSelection extends Component {
@@ -28,6 +29,16 @@ class FoodSelection extends Component {
         this.setState({
           products:products,
         })
+
+        ProductsApi.viewProducts(products => {
+          this.setState({
+            product: products.data
+          }, function(){
+            console.log(products.data,'axios')
+          })
+        })
+      }
+    render(){
       }
 
   render(){
