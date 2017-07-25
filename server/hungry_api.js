@@ -4,6 +4,11 @@ var cors        = require('cors')
 var app         = express();
 var mongodb     = require('mongodb');
 var path        = require('path');
+var fsextra     = require('fs-extra');
+var fs          = require('fs')
+var util        = require('util')
+var multer      = require('multer')
+var upload      = multer( {dest:  __dirname + '/uploads'} )
 
 const MongoClient = require('mongodb').MongoClient;
 
@@ -37,25 +42,84 @@ app.post('/api/submitProduct', function(req,res){
   console.log(prices,'this is the price through node')
   db.collection('products').insert({name:name, prices:prices},true, function(err,result){
     if(err){
-      res.send('Error')
+      res.send({
+        success:false,
+        error: 'There has been an error...'
+      })
 
     }
     console.log(name,' has been sent')
-    res.send( result )
-      console.log(result)
+    res.send({
+      success:true,
+      message: result
+    })
   })
 
 });
 
-app.post('/api/retrieveProducts',function(req,res){
+app.post('/api/submitImage', upload.single('inputForm'), function(req,res){
+
+    if (req.file == null) {
+    // If Submit was accidentally clicked with no file selected...
+      res.render('index', { title:'Please select a picture file to submit!'});
+
+  }
+  else{
+    // read the img file from tmp in-memory location
+   var newImg = fs.readFileSync(req.file.path);
+   // encode the file as a base64 string.
+   var encImg = newImg.toString('base64');
+   // define your new document
+   var newItem = {
+      description: req.body.description,
+      contentType: req.file.mimetype,
+      size: req.file.size,
+      img: Buffer(encImg, 'base64')
+    };
+    db.collection('products').insert(newItem, function(err, result){
+      if(err) {
+        console.log(err)
+      }
+      var newoid = new ObjectId(result.ops[0]._id);
+      fs.remove(req.file.path, function(err) {
+        if (err) { console.log(err) };
+        res.render('index', {title:'Thanks for the Picture!'});
+      });
+    })
+  }
+})
+
+app.post('/api/retrieveName',function(req,res){
   db.collection('products').find().toArray((err,resultProducts) => {
     arrProducts = []
     //unique = [...new Set(resultProducts.map(i => i.name))]
     //res.send(unique)
-    arrProducts.push(resultProducts)
+    for(i=0;i<resultProducts.length;i++){
+      arrProducts.push(resultProducts[i].name)
+    }
     console.log(arrProducts)
     res.send(arrProducts)
+    })
+})
+
+app.post('/api/retrievePrice',function(req,res){
+  db.collection('products').find().toArray((err,resultPrice) => {
+    arrPrice = []
+    //unique = [...new Set(resultProducts.map(i => i.name))]
+    //res.send(unique)
+    for(i=0;i<resultPrice.length;i++){
+      arrPrice.push(resultPrice[i].prices)
+    }
+
+    console.log(arrPrice)
+    res.send(arrPrice)
 
     })
 
+})
+
+app.post('/api/retrieveProducts',function(req,res){
+  db.collection('products').find().toArray((err,results) => {
+      res.send(results)
+  })
 })
