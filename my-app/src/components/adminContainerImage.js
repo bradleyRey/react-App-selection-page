@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+  import React, { Component } from 'react'
   import '../App.css'
   import AppHeader from './appHeader.js'
   import ProductsApi from '../api/hungry_axios'
@@ -20,7 +20,9 @@ import React, { Component } from 'react'
         imageUrl: '',
         inputName: '',
         inputPrice: '',
+        image: '',
         status: ''
+
       };
       this.handleNameChange = this.handleNameChange.bind(this);
       this.handlePriceChange = this.handlePriceChange.bind(this);
@@ -47,57 +49,57 @@ import React, { Component } from 'react'
       })
     }
 
+
     handleSubmit(e){
       e.preventDefault();
       console.log('Handelling the upload process',this.state.prices)
-  /*
-      let fileReader = new FileReader();
-      let file = e.target.files[0];
-      console.log(e.target)
-      fileReader.onloadend = () => {
-        this.setState({
-          file:file,
-          imageUrl: fileReader.result
-        });
+      const files = this.filesInput.files;
+      var fd = new FormData();
+      fd.append('file', files);
+      fd.append('name', this.state.name);
+      fd.append('price', this.state.prices);
+      for(var pair of fd.entries()) {
+        console.log(pair[0]+ ' : '+ pair[1]);
       }
-      var preview = document.querySelector('.previewImage')
-      fileReader.addEventListener("load", function () {
-        preview.src = fileReader.result;
-      }, false);
-      if (file) {
-        fileReader.readAsDataURL(file);
-        console.log(file.name)
-      }
-      //file ? fileReader.readAsDataUrl(file) : null
-  */
-     console.log('attempting to access axios...')
-     ProductsApi.submitProduct(this.state.name, this.state.prices, resp => {
-        console.log('response has been made', resp)
-        //if error message, add to state and show error message on front end
+      console.log(files)
 
-        if(this.state.name === undefined || this.state.prices === undefined){
-          this.setState({
-            name: '',
-            prices:'',
-            status: resp.data.success
-        })}
-        else{
-        this.setState({
+      console.log(fd.entries(),'the new form data')
+      console.log('attempting to access axios...')
+
+
+
+      ProductsApi.submitProduct(fd, resp => {
+        console.log('response has been made', resp)
+
+        /*this.setState({
+          file:this.state.file,
           inputName:this.state.name,
           inputPrice:this.state.prices,
-          status:resp.data.success
+          status:"Information has been sent!",
+          error: false
         },function(){
           console.log(resp,'this is resp')
-          console.log('Axios has send ',this.state.inputName,' to the database')
-          console.log("Status: ", this.state.status)
-        });
-      }
-      })
+          console.log('Axios has send ',this.state.name,' to the database')
+        });*/
+    //  }
+      });
+
 
       console.log(this.state.prices,'This is the new price')
       console.log(this.state.name,'This is the new name')
-      console.log('Status: ',this.state.status)
-    }
+      console.log(this.state, 'whole state')
+
+    /*ProductsApi.submitImages(this.state.file, response => {
+        console.log('axios has been notified to submit an image...')
+        this.setState({
+          file: this.state.file
+        },function(){
+          console.log('Image submission axios response details are as follows: ', response)
+          console.log(this.state.file, ': has been sent to the db')
+          let image = new FormData
+        })
+    })*/
+  }
 
 
     render(){
@@ -117,27 +119,31 @@ import React, { Component } from 'react'
           <h2>Add a new product to the HungryMofos Shop</h2>
           <div className='formWrapper'>
             <div className='center'>
-              <form name='inputForm' encType='multipart/form-data' method='post'>
+              <form name='inputForm'type= "multipart/form-data">
                 <label>
                   Name:
-                  <input value = {this.state.name} onChange={this.handleNameChange} type="text" placeholder='Name' /><br />
+                  <input value = {this.state.name} onChange={this.handleNameChange} type="text" placeholder='Name' name = 'name' /><br />
                   Price:
-                  <input value = {this.state.prices} onChange={this.handlePriceChange} type='text' /><br />
+                  <input value = {this.state.prices} onChange={this.handlePriceChange} type='text' name = 'prices'/><br />
                 </label>
                 <label>
                   Choose an Image:
-                  <input className='imgInsert' type='file'/>
+                  <input
+                    type="file"
+                    ref={(input) => { this.filesInput = input} }
+                    name="file"
+                  />
                 </label>
                 <div>
-                <img className = 'previewImage' />
+                <img className = 'previewImage' value={this.state.image}/>
                 </div>
                 <button className='btn updateBtn' onClick={(e) => this.handleSubmit(e)}>Submit</button>
               </form>
               <div className='response'>
-                {this.state.status ? (
-                  <p>Item has been sent to the Products Page!</p>
+                {this.state.error ? (
+                  <p>{this.state.status}</p>
                 ) : (
-                  <p>Not all fields have been set, please fill in all the fields</p>
+                  null
                 )}
               </div>
             </div>
@@ -145,6 +151,7 @@ import React, { Component } from 'react'
         </div>
       )
     }
+
   }
 
 
