@@ -2,9 +2,9 @@ import axios from 'axios';
 
 class ProductsApi {
 
-  static submitProduct(name,prices,callback){
+  static submitProduct(name,prices,image,callback){
 
-      axios.post('http://localhost:8082/api/submitProduct', {name: name, prices: prices})
+      axios.post('http://localhost:8082/api/submitProduct', {name: name, prices: prices, image:image})
         .then( response => {
         callback(response)
         console.log(response,'RESPONSE HAS BEEN MADE')
@@ -13,6 +13,12 @@ class ProductsApi {
   }
   static viewName(callback){
     axios.post('http://localhost:8082/api/retrieveName')
+      .then( response => {
+        return callback(response)
+    })
+  }
+  static viewImage(callback){
+    axios.post('http://localhost:8082/api/retrieveImage')
       .then( response => {
         return callback(response)
     })

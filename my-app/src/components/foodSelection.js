@@ -56,6 +56,14 @@
             console.log('products from db: ', this.state.newProducts)
           })
         })
+
+        ProductsApi.viewImage(image => {
+          this.setState({
+            image: image.data
+          }, function(){
+            console.log('image from thre db: ', this.state.image)
+          })
+        })
       }
 
     render(){
@@ -67,7 +75,7 @@
             <div className='center'>
 
             </div>
-              <Product productProps={this.state.newProducts} priceProps={this.state.prices} foodProps={this.state.view} />
+              <Product priceProps={this.state.prices} foodProps={this.state.view} imageProps={this.state.image}/>
           </div>
         </div>
       )
@@ -103,36 +111,41 @@
   }
 
   const Product = (props) => {
+    var imageStore = []
     var nameStore = []
     var priceStore = []
-    var productStoreName = []
     var mixStore = []
+    let image = props.imageProps
     let view = props.foodProps
     let prices = props.priceProps
-    let newProducts = props.productProps
+
     for(var i = 0; i < view.length;i++){
       nameStore.push(view[i])
     }
     for(var i = 0; i < prices.length;i++){
       priceStore.push(prices[i])
     }
-
+    for(var i = 0; i < image.length; i++){
+      imageStore.push(image[i])
+    }
+    var urlLink =  nameStore
+    console.log(urlLink,'imageURLL')
+    console.log(image)
     for(var i = 0; i < nameStore.length; i++){
       mixStore.push(
         <div className='imageWrapper'>
-          <div className ='placeHolder'>
+          <div className='photo'>
+            <img src = {`./images/${image}`}/>
+          </div>
+          <div className ='nameHolder'>
             {nameStore[i]}
-            </div>
-            <div className ='placeHolder'>
-              {priceStore[i]}
-            </div>
+          </div>
+          <div className ='priceHolder'>
+            {priceStore[i]}
+          </div>
         </div>
       )
     }
-
-
-
-
     //console.log(view,'newArray')
     return(
       <div>
@@ -143,8 +156,18 @@
         </div>
       </div>
     )
+  }
 
 
+  const imageView = (props) => {
+
+
+
+
+    return(
+<div>
+</div>
+    )
   }
 
 

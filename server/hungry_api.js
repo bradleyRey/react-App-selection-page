@@ -41,8 +41,9 @@ var server= app.listen(process.env.PORT || 8082, function () {
 app.post('/api/submitProduct', function(req,res){
   const name = req.body.name
   const prices = req.body.prices
+  const image = req.body.image
   console.log(prices,'this is the price through node')
-  if(name === undefined || name === '' || prices === '' || prices === undefined){
+  if(name === undefined || name === '' || prices === '' || prices === undefined || image === undefined || image === ''){
     res.send({
       success:false,
       error: 'There has been an error...'
@@ -50,10 +51,8 @@ app.post('/api/submitProduct', function(req,res){
   console.log('FALSE')
 }
     else{
-      db.collection('products').insert({name:name, prices:prices},true, function(err,result){
+      db.collection('products').insert({name:name, prices:prices, image: image},true, function(err,result){
       console.log(name,' has been sent')
-
-    //
   })
   res.send({
     success:true,
@@ -101,7 +100,7 @@ app.post('/api/retrieveName',function(req,res){
     arrProducts = []
     //unique = [...new Set(resultProducts.map(i => i.name))]
     //res.send(unique)
-    for(i=0;i<resultProducts.length;i++){
+    for(var i=0;i<resultProducts.length;i++){
       arrProducts.push(resultProducts[i].name)
     }
     console.log(arrProducts)
@@ -125,6 +124,21 @@ app.post('/api/retrievePrice',function(req,res){
 
 })
 
+app.post('/api/retrieveImage',function(req,res){
+  db.collection('products').find().toArray((err,resultImage) => {
+    arrImage = []
+    //unique = [...new Set(resultProducts.map(i => i.name))]
+    //res.send(unique)
+    for(i=0;i<resultImage.length;i++){
+      arrImage.push(resultImage[i].image)
+    }
+
+    console.log(arrImage)
+    res.send(arrImage)
+
+    })
+
+})
 app.post('/api/retrieveProducts',function(req,res){
   db.collection('products').find().toArray((err,results) => {
       res.send(results)
